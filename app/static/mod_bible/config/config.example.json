@@ -1,0 +1,30 @@
+{
+  "mode": {
+    "current": "development"
+  },
+  "defaults": {
+    "screen_name": "",
+    "body": {
+      "expand_disabled": true,
+      "navbar_collapsed": false,
+      "style": {
+        "padding-top": "100px"
+      }
+    },
+    "navbar": {
+      "style": {
+        "background-color": "#CECECE",
+        "height": "55px"
+      }
+    }
+  },
+  "development": {
+    "restUrl": "http://192.168.1.13:9100/bible/"
+  },
+  "staging": {
+    "restUrl": ""
+  },
+  "production": {
+    "restUrl": ""
+  }
+}

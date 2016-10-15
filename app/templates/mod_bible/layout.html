@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="KJVPCE-Bible" ng-cloak>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/static/mod_bible/images/logo_bible.ico">
+    <link rel="apple-touch-icon-precomposed" href="/static/mod_bibl/images/logo_bible.png">
+
+    <title>KJV-PCE-API v2 - Bible Module</title>
+
+    <!-- Angular & Friends -->
+    <script src="/static/resources/bower_components/angular/angular.min.js"></script>
+    <script src="/static/resources/bower_components/angular-route/angular-route.min.js"></script>
+    <script src="/static/resources/bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="/static/resources/bower_components/angular-touch/angular-touch.min.js"></script>
+
+    <!-- Angular UI Bootstrap -->
+    <script src="/static/resources/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="/static/resources/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/resources/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/resources/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/static/resources/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Application Scripts -->
+    <script src="/static/resources/angular/services/main.js"></script>
+    <script src="/static/resources/angular/services/log.js"></script>
+    <script src="/static/resources/angular/services/http.js"></script>
+
+    <script src="/static/resources/angular/directives/main.js"></script>
+    <script src="/static/resources/angular/directives/pressableelement.js"></script>
+    <script src="/static/resources/angular/directives/contextmenu.js"></script>
+    <script src="/static/resources/angular/directives/pressenter.js"></script>
+    <script src="/static/resources/angular/filters/main.js"></script>
+    <script src="/static/resources/angular/filters/offset.js"></script>
+    <script src="/static/resources/angular/filters/highlight.js"></script>
+
+    <script src="/static/mod_bible/app.js"></script>
+    <script src="/static/mod_bible/scripts/controllers/main.js"></script>
+    <script src="/static/mod_bible/scripts/controllers/lookup.js"></script>
+    <script src="/static/mod_bible/scripts/directives/buttonrange.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="/static/mod_bible/css/style.css" rel="stylesheet">
+  </head>
+
+  <body ng-style="config.body.style">
+    <div id="wrap">
+      <!-- Top Navigation Bar -->
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container" ng-show="!config.body.navbar_collapsed">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" ng-disabled="config.body.expand_disabled">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/">MLT Bible Module</a>
+          </div>
+          <div id="navbar" class="navbar-collapse" ng-class="config.body.navbar_expanded ? '' : 'collapse'">
+            <ul class="nav navbar-nav">
+              <li><a href="#about">About</a></li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#/">Action</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#/">Separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#/">Default</a></li>
+              <!-- <li><a href="#/">Static top <span class="sr-only">(current)</span></a></li>
+              <li><a href="#/">Fixed top</a></li> -->
+            </ul>
+            <!-- <form class = "navbar-form navbar-left" role = "search">
+              <div class = "form-group">
+                <input type = "text" class = "form-control" placeholder = "Search">
+              </div>
+            </form> -->
+          </div><!--/.nav-collapse -->
+        </div>
+        <div class="navbar-lower" ng-style="config.navbar.style">
+          <div class="container">
+            <!-- <button type="button" class="btn btn-transparent btn-md" ng-show="config.screen_name!='MainController' &&" ng-click="home()">
+              <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            </button> -->
+            <!-- <span ng-if="!data.selected_book && config.screen_name=='LookupController'">Back to Home</span> -->
+            <div class="btn-group" role="group" aria-label="..." ng-if="config.screen_name=='LookupController' && data.selected_book">
+              <button type="button" class="btn btn-warning btn-md" ng-click="clearBookSelection()">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="btn btn-primary btn-md" ng-click="data.selected_book ? selectAnotherBook() : null">{[data.selected_book ? data.selected_book.book_name : 'Book']}</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="..." ng-show="config.screen_name=='LookupController'">
+              <button type="button" class="btn btn-default btn-md" ng-click="data.selected_book || data.selected_book.selected_chapter ? selectAnotherChapter() : null" ng-if="data.selected_book.selected_chapter">{[data.selected_book.selected_chapter ? data.selected_book.selected_chapter.chapter_id : 'Chapter']}</button>
+              <button type="button" class="btn btn-default btn-md" ng-click="data.selected_book.selected_verse ? selectAnotherVerse() : null" ng-if="data.selected_book.selected_verse">{[data.selected_book.selected_verse ? data.selected_book.selected_verse : 'Verse']}</button>
+            </div>
+            <button type="button" class="btn pull-right" ng-class="data.search_mode || data.loading_book ? 'btn-default' : 'btn-success'" ng-show="config.screen_name=='LookupController' && !data.loading_book" ng-click="data.loading_book ? null: switchSearchMode()">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+
+            <input type="text" class="form-control pull-left" placeholder="Reference" ng-if="config.screen_name=='LookupController' && !data.selected_book" style="width: 150px !important; margin-right: 5px !important;" ng-model="data.reference_lookup.data" press-enter="lookupReference()">
+            <button  ng-if="config.screen_name=='LookupController' && !data.selected_book" type="button" class="btn pull-left" ng-class="'btn-primary'" ng-click="lookupReference()">
+              <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- This is where the main content for each section is displayed -->
+      <div class="container">
+        {% block content %}
+        {% endblock content %}
+      </div>
+
+      <!-- Bottom Navigation Bar -->
+      <div class="col-xs-12 navbar-inverse navbar-fixed-bottom">
+        <div class="row" id="bottomNav">
+          <div class="col-xs-3 text-center stuff"><a href="#/" title="Home"><i class="glyphicon glyphicon-home"></i></a></div>
+          <div class="col-xs-2 text-center"><a href="#/plugins" title="Plugins"><i class="glyphicon glyphicon-briefcase"></i></a></div>
+          <div class="col-xs-2 text-center"><a href="#/tools/add" title="Tools"><i class="glyphicon glyphicon-plus"></i></a></div>
+          <div class="col-xs-2 text-center"><a href="#/lookup" title="Lookup"><i class="glyphicon glyphicon-book"></i></a></div>
+          <!-- <div class="col-xs-2 text-center"><a href="#/lookup" title="Lookup"><i class="glyphicon glyphicon-search"></i></a></div> -->
+          <div class="col-xs-3 text-center"><a href="#/settings" title="Settings"><i class="glyphicon glyphicon-cog"></i></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

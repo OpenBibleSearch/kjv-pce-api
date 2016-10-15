@@ -1,54 +1,67 @@
-kjv-pce-api
-=====================================================================================
-King James Version PCE API for Public Consumption
+# kjv-pce-api
 
-Data
-=====================================================================================
-The SQLite Database was made available from http://www.bibleprotector.com/KJV-PCE.db
+## King James Version PCE API for Public Consumption
 
-Usage
-=====================================================================================
-|Lists of Specific Groups|Query String|
-|------------------------|----------------------------------------------------------|
-|List All Books in the OT|?get_section=OT
-|List All Books in the NT|?get_section=NT
-|List of Books|?get_books=1|
-|List of Chapters in a Book|?get_chapters=1&book=1|
-|List of Chapters in a Book with All Verse Data|?get_chapters=1&book=1&include_data=1|
-|List of Verses in a Book & Chapter|?get_verses=1&book=1&chapter=1|
+### Old Versions
+* For the original PHP api, checkout the branch named '[minimal-php](https://github.com/psyclone241/kjv-pce-api/tree/minimal-php)'
 
+### Active Sample
+* [KJV.byfaith.net](http://kjv.byfaith.net)
 
-|Lists of Specific Categories|Query String|
-|------------------------|----------------------------------------------------------|
-|List Complete Section|?section=OT or ?section=NT|
-|List Complete Book|?book=1|
-|List Complete Chapter|?book=1&chapter=1|
-|List Single Verse|?book=1&chapter=1&verses=1|
-|List Range of Verses|?book=1&chapter=1&verses=1-5|
-|List Specific Group of Verses|?book=1&chapter=1&verses=1,3,5|
+### Data
+* The SQLite Database was made available from http://www.bibleprotector.com/KJV-PCE.db
+* The SQLite Database at data/kjv-pce-v2.db has column name modifications from the original
+* The MySQL Database Dump was built from the above SQLite Database
 
-|All searches can be narrowed down by book, chapter, and verses|Query String|
-|------------------------|----------------------------------------------------------|
-|Search for Specific Keyword is Contained in Text|?keyword=keyword&match=contains|
-|Search for Specific Keyword Where Text Starts With Text|?keyword=keyword&match=startswith|
-|Search for Specific Keyword Where Text Ends With Text|?keyword=keyword&match=endswith|
-|Search for Specific Keyword Where Text is an Exact Match in Text|?keyword=keyword&match=exact|
+### Setup
+* Refer to [INSTALL.md](INSTALL.md) for installation and setup instructions
 
-Parameters & Possible Values
-=====================================================================================
-|Parameter|Possible Value|
-|------------------------|----------------------------------------------------------|
-|output|str('csv'), str('xml'), or str('json') -> Defaults to json if nothing selected, or the requested format is not supported
-|section|str('OT') or str('NT') -> Used individually or in conjunction with keyword, book, chapter, verses|
-|book|int(BookID), str(BookName), str(BookAbr) -> Used individually or in conjunction with keyword, section, chapter, verses|
-|chapter|int(Chapter) -> Used individually or in conjunction with keyword, section, book, verses|
-|verse or verses|int(x), int(x)-int(y), int(a),int(c), int(d) -> Used individually or in conjunction with keyword, section, book, chapter|
-|keyword|str('string') -> Requires (match), used in conjunction with section, book, chapter, and/or verses|
-|match|str('contains'), str('startswith'), str('endswith'), str('exact') -> Used in conjunction with keyword|
-|get_section|str('OT') or str('NT')|
-|get_books|boolean -> Requires (book)|
-|get_chapters|boolean -> Requires (book, chapter)|
-|get_verses|boolean -> Requires (book, chapter, verses)|
-|include_data|boolean -> Used in conjunction with get_* parameters|
-|insensitive|boolean -> Sets the whole query to case insensitive, case sensitive is the default|
-|get_file|boolean -> Returns the CSV output format in a downloaded file
+### TODO List
+* Add Strongs and some detailed concordance texts
+* Add more/thorough testing to the run_tests.py suite
+
+### Usage
+* Run the service
+  * `make serve`
+* All following commands are prefaced with http://your_host_name:your_port
+* Use web interface, go to http://your_host_name:your_port/bible/
+* Get Sections (NT/OT)
+  * List All Books in the OT
+    * /bible/get_section/OT
+  * List All Books in the NT
+    * /bible/get_section/NT
+* Get Book Information
+  * List of Books
+    * /bible/get_section/
+  * List of Books
+    * /bible/get_books/
+  * List of Chapters in a Book
+    * /bible/get_chapters/1
+  * List of Verses in a Book & Chapter
+    * /bible/get_chapters/1/verses
+* Lookup Verses
+  * List Complete Book
+    * /bible/lookup/1
+  * List Complete Chapter
+    * /bible/lookup/1/1
+  * List Single Verse
+    * /bible/lookup/1/1/1
+  * List Range of Verses
+    * /bible/lookup/1/1/1-5
+  * List Specific Group of Verses
+    * /bible/lookup/1/1/1,3,5
+* Keyword Searches (can be narrowed down by book, chapter, and verses, same format as lookup, just add /book/chapter/verse)
+  * Search for Specific Keyword is Contained in Text
+    * /bible/keyword/contains/word
+  * Search for Specific Keyword Where Text Starts With Text
+    * /bible/keyword/startswith/word
+  * Search for Specific Keyword Where Text Ends With Text
+    * /bible/keyword/endswith/word
+  * Search for Specific Keyword Where Text is an Exact Match in Text
+    * /bible/keyword/exact/word
+
+### Testing
+* Run the flask apps test suite
+  * `make testflask` or
+  * `python run_python_tests.py`
+* TODO: Build Angular application test suite with Karma
